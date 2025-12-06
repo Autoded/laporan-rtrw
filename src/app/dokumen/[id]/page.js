@@ -141,10 +141,11 @@ export default function DocumentDetailPage({ params }) {
         doc.text('Yang Menyetujui,', 140, nextY + 50);
         doc.text('Ketua RT 01', 140, nextY + 57);
 
-        // Add signature image if exists
+        // Add signature image if exists (compressed)
         if (document.approverSignature) {
             try {
-                doc.addImage(document.approverSignature, 'PNG', 130, nextY + 62, 50, 25);
+                // Use JPEG format with compression for smaller file size
+                doc.addImage(document.approverSignature, 'JPEG', 130, nextY + 62, 40, 20, undefined, 'FAST');
             } catch (e) {
                 // Signature image failed to load
             }
