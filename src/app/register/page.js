@@ -31,7 +31,6 @@ export default function RegisterPage() {
         e.preventDefault();
         setError('');
 
-        // Validation
         if (formData.password !== formData.confirmPassword) {
             setError('Password tidak cocok');
             return;
@@ -60,32 +59,98 @@ export default function RegisterPage() {
         }
     };
 
+    const inputStyle = {
+        width: '100%',
+        padding: '0.875rem 1rem 0.875rem 3rem',
+        border: '1px solid #E2E8F0',
+        borderRadius: '10px',
+        fontSize: '0.9375rem',
+        backgroundColor: '#FFFFFF',
+        outline: 'none',
+        boxSizing: 'border-box',
+    };
+
+    const inputWithRightIconStyle = {
+        ...inputStyle,
+        paddingRight: '3rem',
+    };
+
+    const labelStyle = {
+        display: 'block',
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        color: '#64748B',
+        marginBottom: '0.5rem',
+    };
+
+    const iconStyle = {
+        position: 'absolute',
+        left: '1rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '20px',
+        height: '20px',
+        color: '#94A3B8',
+    };
+
     return (
-        <div className="min-h-screen flex">
+        <div style={{ minHeight: '100vh', display: 'flex' }}>
             {/* Left Side - Gradient */}
-            <div className="hidden lg:flex flex-1 bg-gradient-hero items-center justify-center p-12">
-                <div className="max-w-lg text-white text-center">
-                    <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur">
-                        <Shield className="w-10 h-10" />
+            <div style={{
+                flex: 1,
+                background: 'linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #8B5CF6 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3rem',
+            }}>
+                <div style={{ maxWidth: '480px', textAlign: 'center', color: 'white' }}>
+                    <div style={{
+                        width: '80px',
+                        height: '80px',
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        borderRadius: '24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 2rem',
+                    }}>
+                        <Shield style={{ width: '40px', height: '40px' }} />
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">
+                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>
                         Bergabung dengan Komunitas
                     </h2>
-                    <p className="text-white/80">
+                    <p style={{ opacity: 0.8, marginBottom: '3rem' }}>
                         Daftar sekarang dan mulai berkontribusi untuk lingkungan RT/RW yang lebih baik.
                     </p>
 
-                    <div className="mt-12 space-y-4 text-left">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
                         {[
                             'Laporkan masalah di lingkungan secara anonim',
                             'Pantau keuangan RT/RW secara transparan',
                             'Ajukan surat-surat secara online',
                         ].map((item, index) => (
-                            <div key={index} className="flex items-center gap-4 bg-white/10 rounded-xl px-5 py-4">
-                                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-sm font-bold">{index + 1}</span>
+                            <div key={index} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem',
+                                backgroundColor: 'rgba(255,255,255,0.1)',
+                                borderRadius: '12px',
+                                padding: '1rem 1.25rem',
+                            }}>
+                                <div style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    backgroundColor: 'rgba(255,255,255,0.2)',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0,
+                                }}>
+                                    <span style={{ fontSize: '0.875rem', fontWeight: 700 }}>{index + 1}</span>
                                 </div>
-                                <p className="text-sm leading-relaxed">{item}</p>
+                                <p style={{ fontSize: '0.9375rem', margin: 0 }}>{item}</p>
                             </div>
                         ))}
                     </div>
@@ -93,149 +158,206 @@ export default function RegisterPage() {
             </div>
 
             {/* Right Side - Form */}
-            <div className="flex-1 flex items-center justify-center p-8 overflow-y-auto">
-                <div className="w-full max-w-md py-8">
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+                overflowY: 'auto',
+                backgroundColor: '#FFFFFF',
+            }}>
+                <div style={{ width: '100%', maxWidth: '420px' }}>
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-3 mb-8">
-                        <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                            <Shield className="w-7 h-7 text-white" />
+                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', textDecoration: 'none' }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <Shield style={{ width: '28px', height: '28px', color: 'white' }} />
                         </div>
                         <div>
-                            <h1 className="font-bold text-2xl text-[var(--text-primary)]">LaporRT</h1>
-                            <p className="text-sm text-[var(--text-tertiary)]">RT 01 / RW 05</p>
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>LaporRT</h1>
+                            <p style={{ fontSize: '0.8125rem', color: '#94A3B8', margin: 0 }}>RT 01 / RW 05</p>
                         </div>
                     </Link>
 
                     {/* Title */}
-                    <div className="mb-8">
-                        <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
+                    <div style={{ marginBottom: '2rem' }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0F172A', margin: '0 0 0.5rem 0' }}>
                             Buat Akun Baru
                         </h2>
-                        <p className="text-[var(--text-secondary)]">
+                        <p style={{ color: '#64748B', margin: 0 }}>
                             Daftar untuk mulai menggunakan layanan
                         </p>
                     </div>
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+                        <div style={{
+                            marginBottom: '1.5rem',
+                            padding: '1rem',
+                            backgroundColor: '#FEF2F2',
+                            border: '1px solid #FECACA',
+                            borderRadius: '10px',
+                            color: '#DC2626',
+                            fontSize: '0.875rem',
+                        }}>
                             {error}
                         </div>
                     )}
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="input-group">
-                            <label className="input-label">Nama Lengkap</label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        {/* Nama Lengkap */}
+                        <div>
+                            <label style={labelStyle}>Nama Lengkap</label>
+                            <div style={{ position: 'relative' }}>
+                                <User style={iconStyle} />
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
                                     placeholder="Nama lengkap Anda"
-                                    className="input pl-12"
+                                    style={inputStyle}
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="input-group">
-                            <label className="input-label">Email</label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                        {/* Email */}
+                        <div>
+                            <label style={labelStyle}>Email</label>
+                            <div style={{ position: 'relative' }}>
+                                <Mail style={iconStyle} />
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     placeholder="nama@email.com"
-                                    className="input pl-12"
+                                    style={inputStyle}
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="input-group">
-                            <label className="input-label">Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                        {/* Password */}
+                        <div>
+                            <label style={labelStyle}>Password</label>
+                            <div style={{ position: 'relative' }}>
+                                <Lock style={iconStyle} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Minimal 6 karakter"
-                                    className="input pl-12 pr-12"
+                                    style={inputWithRightIconStyle}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+                                    style={{
+                                        position: 'absolute',
+                                        right: '1rem',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        padding: 0,
+                                        color: '#94A3B8',
+                                    }}
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    {showPassword ? <EyeOff style={{ width: '20px', height: '20px' }} /> : <Eye style={{ width: '20px', height: '20px' }} />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="input-group">
-                            <label className="input-label">Konfirmasi Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                        {/* Konfirmasi Password */}
+                        <div>
+                            <label style={labelStyle}>Konfirmasi Password</label>
+                            <div style={{ position: 'relative' }}>
+                                <Lock style={iconStyle} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     placeholder="Ulangi password Anda"
-                                    className="input pl-12"
+                                    style={inputStyle}
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="input-group">
-                            <label className="input-label">Nomor Telepon</label>
-                            <div className="relative">
-                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                        {/* Nomor Telepon */}
+                        <div>
+                            <label style={labelStyle}>Nomor Telepon</label>
+                            <div style={{ position: 'relative' }}>
+                                <Phone style={iconStyle} />
                                 <input
                                     type="tel"
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
                                     placeholder="08xxxxxxxxxx"
-                                    className="input pl-12"
+                                    style={inputStyle}
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="input-group">
-                            <label className="input-label">Alamat (RT/RW)</label>
-                            <div className="relative">
-                                <MapPin className="absolute left-4 top-3 w-5 h-5 text-[var(--text-tertiary)]" />
+                        {/* Alamat */}
+                        <div>
+                            <label style={labelStyle}>Alamat (RT/RW)</label>
+                            <div style={{ position: 'relative' }}>
+                                <MapPin style={{ ...iconStyle, top: '1.25rem', transform: 'none' }} />
                                 <textarea
                                     name="address"
                                     value={formData.address}
                                     onChange={handleChange}
                                     placeholder="Contoh: RT 01/RW 05, No. 15"
-                                    className="input pl-12 textarea"
+                                    style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
                                     rows={2}
                                     required
                                 />
                             </div>
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="btn btn-primary w-full"
+                            style={{
+                                width: '100%',
+                                padding: '0.875rem',
+                                backgroundColor: '#3B82F6',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '10px',
+                                fontSize: '0.9375rem',
+                                fontWeight: 600,
+                                cursor: isLoading ? 'not-allowed' : 'pointer',
+                                opacity: isLoading ? 0.7 : 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                marginTop: '0.5rem',
+                            }}
                         >
                             {isLoading ? (
                                 <>
-                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    <Loader2 style={{ width: '20px', height: '20px', animation: 'spin 1s linear infinite' }} />
                                     Memproses...
                                 </>
                             ) : (
@@ -245,9 +367,9 @@ export default function RegisterPage() {
                     </form>
 
                     {/* Login Link */}
-                    <p className="mt-8 text-center text-[var(--text-secondary)]">
+                    <p style={{ marginTop: '2rem', textAlign: 'center', color: '#64748B' }}>
                         Sudah punya akun?{' '}
-                        <Link href="/login" className="text-[var(--primary)] font-medium hover:underline">
+                        <Link href="/login" style={{ color: '#3B82F6', fontWeight: 500, textDecoration: 'none' }}>
                             Masuk di sini
                         </Link>
                     </p>
