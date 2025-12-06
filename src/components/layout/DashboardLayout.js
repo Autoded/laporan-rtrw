@@ -17,7 +17,8 @@ import {
     X,
     Bell,
     Search,
-    ChevronDown
+    ChevronDown,
+    Users
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
@@ -86,6 +87,7 @@ export default function DashboardLayout({ children }) {
         ...(isAdmin ? [{ href: '/keuangan/kelola', icon: Settings, label: 'Kelola Keuangan' }] : []),
         { href: '/dokumen', icon: FileCheck, label: 'Dokumen' },
         { href: '/dokumen/ajukan', icon: PlusCircle, label: 'Ajukan Dokumen' },
+        ...((isAdmin || isKetuaRT) ? [{ href: '/admin/users', icon: Users, label: 'Kelola Pengguna' }] : []),
     ];
 
     const getInitials = (name) => {
