@@ -204,6 +204,23 @@ export function getUserById(id) {
     return users.find(u => u.id === id);
 }
 
+export function updateUser(id, updates) {
+    const users = getUsers();
+    const index = users.findIndex(u => u.id === id);
+    if (index !== -1) {
+        users[index] = { ...users[index], ...updates };
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+        return users[index];
+    }
+    return null;
+}
+
+export function deleteUser(id) {
+    const users = getUsers();
+    const filtered = users.filter(u => u.id !== id);
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(filtered));
+}
+
 // Current User
 export function setCurrentUser(user) {
     if (typeof window === 'undefined') return;
