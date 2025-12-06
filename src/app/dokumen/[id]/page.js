@@ -92,6 +92,7 @@ export default function DocumentDetailPage({ params }) {
 
     // Download surat as text file (simulated)
     const handleDownloadSurat = () => {
+        if (!document) return;
         const typeInfo = getDocumentTypeInfo(document.type);
 
         const content = `
@@ -128,12 +129,14 @@ Demikian surat pengantar ini dibuat untuk dipergunakan sebagaimana mestinya.
 `;
 
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        const link = document.createElement ? window.document.createElement('a') : null;
-        if (link) {
-            link.href = URL.createObjectURL(blob);
-            link.download = `Surat-${document.id}-${document.requesterName.replace(/\s/g, '_')}.txt`;
-            link.click();
-        }
+        const url = URL.createObjectURL(blob);
+        const link = window.document.createElement('a');
+        link.href = url;
+        link.download = `Surat-${document.id}-${document.requesterName.replace(/\s/g, '_')}.txt`;
+        window.document.body.appendChild(link);
+        link.click();
+        window.document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const openApprovalModal = (type) => {
@@ -643,6 +646,56 @@ Demikian surat pengantar ini dibuat untuk dipergunakan sebagaimana mestinya.
                                         <><XCircle style={{ width: '16px', height: '16px' }} /> Tolak</>
                                     )}
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Document Preview Modal */}
+                {showDocPreview && (
+                    <div style={{
+                        position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        zIndex: 60, padding: '1rem'
+                    }}>
+                        <div style={{
+                            backgroundColor: 'white', borderRadius: '16px',
+                            width: '100%', maxWidth: '500px', overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                padding: '1.25rem 1.5rem', borderBottom: '1px solid #E2E8F0',
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                            }}>
+                                <h3 style={{ fontWeight: 600, color: '#0F172A', margin: 0 }}>
+                                    Dokumen Pendukung
+                                </h3>
+                                <button onClick={() => setShowDocPreview(null)} style={{
+                                    padding: '0.5rem', backgroundColor: '#F1F5F9', border: 'none',
+                                    borderRadius: '8px', cursor: 'pointer'
+                                }}>
+                                    <X style={{ width: '18px', height: '18px', color: '#64748B' }} />
+                                </button>
+                            </div>
+                            <div style={{ padding: '2rem', textAlign: 'center' }}>
+                                <div style={{
+                                    width: '80px', height: '80px', backgroundColor: '#F1F5F9',
+                                    borderRadius: '16px', display: 'flex', alignItems: 'center',
+                                    justifyContent: 'center', margin: '0 auto 1rem'
+                                }}>
+                                    <FileText style={{ width: '40px', height: '40px', color: '#64748B' }} />
+                                </div>
+                                <h4 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0F172A', margin: '0 0 0.5rem 0' }}>
+                                    {showDocPreview}
+                                </h4>
+                                <p style={{ color: '#64748B', fontSize: '0.875rem', margin: '0 0 1.5rem 0' }}>
+                                    Dokumen ini diupload sebagai persyaratan permohonan surat.
+                                </p>
+                                <div style={{
+                                    padding: '1rem', backgroundColor: '#FEF3C7',
+                                    borderRadius: '10px', fontSize: '0.875rem', color: '#92400E'
+                                }}>
+                                    <strong>Mode Demo:</strong> Preview file tidak tersedia karena file tidak benar-benar diupload ke server.
+                                </div>
                             </div>
                         </div>
                     </div>
