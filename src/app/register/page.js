@@ -157,51 +157,43 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="input-group">
-                                <label className="input-label">Password</label>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        placeholder="Min. 6 karakter"
-                                        className="input pl-12"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="input-group">
-                                <label className="input-label">Konfirmasi</label>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="Ulangi password"
-                                        className="input pl-12"
-                                        required
-                                    />
-                                </div>
+                        <div className="input-group">
+                            <label className="input-label">Password</label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    placeholder="Minimal 6 karakter"
+                                    className="input pl-12 pr-12"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+                                >
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                </button>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="showPassword"
-                                checked={showPassword}
-                                onChange={() => setShowPassword(!showPassword)}
-                                className="w-4 h-4 rounded border-[var(--border-color)]"
-                            />
-                            <label htmlFor="showPassword" className="text-sm text-[var(--text-secondary)]">
-                                Tampilkan password
-                            </label>
+                        <div className="input-group">
+                            <label className="input-label">Konfirmasi Password</label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    placeholder="Ulangi password Anda"
+                                    className="input pl-12"
+                                    required
+                                />
+                            </div>
                         </div>
 
                         <div className="input-group">
