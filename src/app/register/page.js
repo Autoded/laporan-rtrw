@@ -81,11 +81,11 @@ export default function RegisterPage() {
                             'Pantau keuangan RT/RW secara transparan',
                             'Ajukan surat-surat secara online',
                         ].map((item, index) => (
-                            <div key={index} className="flex items-center gap-3 bg-white/10 rounded-xl p-4">
-                                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <div key={index} className="flex items-center gap-4 bg-white/10 rounded-xl px-5 py-4">
+                                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <span className="text-sm font-bold">{index + 1}</span>
                                 </div>
-                                <p className="text-sm">{item}</p>
+                                <p className="text-sm leading-relaxed">{item}</p>
                             </div>
                         ))}
                     </div>
@@ -124,7 +124,7 @@ export default function RegisterPage() {
                     )}
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="input-group">
                             <label className="input-label">Nama Lengkap</label>
                             <div className="relative">
