@@ -90,53 +90,78 @@ export default function DocumentDetailPage({ params }) {
         setIsSubmitting(false);
     };
 
-    // Download surat as text file (simulated)
-    const handleDownloadSurat = () => {
+    // Download surat as PDF
+    const handleDownloadSurat = async () => {
         if (!document) return;
+
+        // Dynamic import jsPDF
+        const { jsPDF } = await import('jspdf');
+        const doc = new jsPDF();
         const typeInfo = getDocumentTypeInfo(document.type);
 
-        const content = `
-================================================================================
-                            SURAT PENGANTAR RT
-                         RT 01 / RW 05 Kelurahan XYZ
-================================================================================
+        // Header
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('SURAT PENGANTAR RT', 105, 25, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text('RT 01 / RW 05 Kelurahan XYZ', 105, 32, { align: 'center' });
 
-Nomor Surat    : ${document.id}
-Tanggal        : ${formatDate(document.approvedAt)}
+        // Line
+        doc.setLineWidth(0.5);
+        doc.line(20, 38, 190, 38);
 
-Yang bertanda tangan di bawah ini, Ketua RT 01 RW 05, menerangkan bahwa:
+        // Document Info
+        doc.setFontSize(11);
+        doc.text(`Nomor Surat    : ${document.id}`, 20, 50);
+        doc.text(`Tanggal        : ${formatDate(document.approvedAt)}`, 20, 57);
 
-Nama           : ${document.requesterName}
-Alamat         : ${document.requesterAddress}
+        // Content
+        doc.text('Yang bertanda tangan di bawah ini, Ketua RT 01 RW 05, menerangkan bahwa:', 20, 70);
 
-Adalah benar warga RT 01 RW 05 dan bermaksud untuk:
-${document.purpose}
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Nama           : ${document.requesterName}`, 20, 82);
+        doc.text(`Alamat         : ${document.requesterAddress}`, 20, 89);
 
-Jenis Dokumen  : ${typeInfo.label}
-Status         : DISETUJUI
+        doc.setFont('helvetica', 'normal');
+        doc.text('Adalah benar warga RT 01 RW 05 dan bermaksud untuk:', 20, 102);
 
-Demikian surat pengantar ini dibuat untuk dipergunakan sebagaimana mestinya.
+        // Purpose (with text wrapping)
+        const purposeLines = doc.splitTextToSize(document.purpose, 170);
+        doc.text(purposeLines, 20, 112);
 
-                                            Yang Menyetujui,
-                                            Ketua RT 01
+        const nextY = 112 + (purposeLines.length * 7);
 
+        doc.text(`Jenis Dokumen  : ${typeInfo.label}`, 20, nextY + 10);
+        doc.text(`Status         : DISETUJUI`, 20, nextY + 17);
 
-                                            ${document.approverName}
+        doc.text('Demikian surat pengantar ini dibuat untuk dipergunakan sebagaimana mestinya.', 20, nextY + 32);
 
-================================================================================
-                    Dokumen ini dikeluarkan secara resmi oleh Sistem LaporRT
-================================================================================
-`;
+        // Signature
+        doc.text('Yang Menyetujui,', 140, nextY + 50);
+        doc.text('Ketua RT 01', 140, nextY + 57);
 
-        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const link = window.document.createElement('a');
-        link.href = url;
-        link.download = `Surat-${document.id}-${document.requesterName.replace(/\s/g, '_')}.txt`;
-        window.document.body.appendChild(link);
-        link.click();
-        window.document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        // Add signature image if exists
+        if (document.approverSignature) {
+            try {
+                doc.addImage(document.approverSignature, 'PNG', 130, nextY + 62, 50, 25);
+            } catch (e) {
+                // Signature image failed to load
+            }
+        }
+
+        doc.setFont('helvetica', 'bold');
+        doc.text(document.approverName, 140, nextY + 95);
+
+        // Footer
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'italic');
+        doc.setLineWidth(0.3);
+        doc.line(20, 275, 190, 275);
+        doc.text('Dokumen ini dikeluarkan secara resmi oleh Sistem LaporRT', 105, 282, { align: 'center' });
+
+        // Save
+        doc.save(`Surat-${document.id}-${document.requesterName.replace(/\s/g, '_')}.pdf`);
     };
 
     const openApprovalModal = (type) => {
