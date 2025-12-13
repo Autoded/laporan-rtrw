@@ -24,8 +24,8 @@ export default function DokumenPage() {
         filterDocuments();
     }, [documents, searchQuery, statusFilter, typeFilter]);
 
-    const loadDocuments = () => {
-        const allDocs = getDocuments();
+    const loadDocuments = async () => {
+        const allDocs = await getDocuments();
         const userDocs = user?.role === 'warga' ? allDocs.filter(d => d.requesterId === user?.id) : allDocs;
         setDocuments(userDocs);
     };

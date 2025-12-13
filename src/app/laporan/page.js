@@ -24,8 +24,8 @@ export default function LaporanPage() {
         filterReports();
     }, [reports, searchQuery, statusFilter, categoryFilter]);
 
-    const loadReports = () => {
-        const allReports = getReports();
+    const loadReports = async () => {
+        const allReports = await getReports();
         setReports(allReports);
     };
 

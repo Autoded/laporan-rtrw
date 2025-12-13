@@ -25,15 +25,15 @@ export default function ReportDetailPage({ params }) {
         loadReport();
     }, [resolvedParams.id]);
 
-    const loadReport = () => {
-        const found = getReportById(resolvedParams.id);
+    const loadReport = async () => {
+        const found = await getReportById(resolvedParams.id);
         if (found) setReport(found);
         setIsLoading(false);
     };
 
     const handleStatusChange = async (newStatus) => {
         setShowStatusMenu(false);
-        const updated = updateReport(report.id, { status: newStatus });
+        const updated = await updateReport(report.id, { status: newStatus });
         if (updated) setReport(updated);
     };
 
@@ -50,7 +50,7 @@ export default function ReportDetailPage({ params }) {
             responderName: user.name,
             responderRole: user.role,
         };
-        const updated = updateReport(report.id, {
+        const updated = await updateReport(report.id, {
             responses: [...(report.responses || []), newResponse],
             status: report.status === 'baru' ? 'proses' : report.status,
         });
@@ -61,8 +61,8 @@ export default function ReportDetailPage({ params }) {
         setIsSubmitting(false);
     };
 
-    const handleDelete = () => {
-        deleteReport(report.id);
+    const handleDelete = async () => {
+        await deleteReport(report.id);
         router.push('/laporan');
     };
 

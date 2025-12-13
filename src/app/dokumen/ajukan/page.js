@@ -154,7 +154,7 @@ export default function AjukanDokumenPage() {
             updatedAt: new Date().toISOString(),
         };
 
-        addDocument(newDocument);
+        await addDocument(newDocument);
         setCreatedId(docId);
         setShowSuccess(true);
         setIsSubmitting(false);

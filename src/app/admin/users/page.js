@@ -24,20 +24,20 @@ export default function AdminUsersPage() {
         loadUsers();
     }, [isAdmin, isKetuaRT]);
 
-    const loadUsers = () => {
-        const allUsers = getUsers();
+    const loadUsers = async () => {
+        const allUsers = await getUsers();
         setUsers(allUsers);
     };
 
-    const handleRoleChange = (userId, newRole) => {
-        updateUser(userId, { role: newRole });
-        loadUsers();
+    const handleRoleChange = async (userId, newRole) => {
+        await updateUser(userId, { role: newRole });
+        await loadUsers();
         setEditingUser(null);
     };
 
-    const handleDeleteUser = (userId) => {
-        deleteUser(userId);
-        loadUsers();
+    const handleDeleteUser = async (userId) => {
+        await deleteUser(userId);
+        await loadUsers();
         setShowDeleteConfirm(null);
     };
 

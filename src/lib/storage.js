@@ -1,349 +1,502 @@
-// LocalStorage utility functions for demo mode
-const STORAGE_KEYS = {
-    USERS: 'rtrw_users',
-    CURRENT_USER: 'rtrw_current_user',
-    REPORTS: 'rtrw_reports',
-    FINANCES: 'rtrw_finances',
-    DOCUMENTS: 'rtrw_documents',
-};
+// Storage utility functions - Supabase + localStorage fallback
+import { supabase, isSupabaseEnabled } from './supabase';
 
-// Initialize default data
-export function initializeStorage() {
-    if (typeof window === 'undefined') return;
+// ==================== USERS ====================
 
-    // Initialize default users if not exists
-    if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-        const defaultUsers = [
-            {
-                id: '1',
-                name: 'Budi Santoso',
-                email: 'ketua@rtrw.com',
-                password: 'admin123',
-                role: 'ketua_rt',
-                phone: '081234567890',
-                address: 'RT 01/RW 05',
-                createdAt: new Date().toISOString(),
-            },
-            {
-                id: '2',
-                name: 'Siti Rahayu',
-                email: 'bendahara@rtrw.com',
-                password: 'admin123',
-                role: 'admin',
-                phone: '081234567891',
-                address: 'RT 01/RW 05',
-                createdAt: new Date().toISOString(),
-            },
-            {
-                id: '3',
-                name: 'Ahmad Wijaya',
-                email: 'warga@rtrw.com',
-                password: 'warga123',
-                role: 'warga',
-                phone: '081234567892',
-                address: 'RT 01/RW 05, No. 15',
-                createdAt: new Date().toISOString(),
-            },
-        ];
-        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(defaultUsers));
+export async function getUsers() {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching users:', error);
+            return [];
+        }
+        return data || [];
     }
-
-    // Initialize sample reports
-    if (!localStorage.getItem(STORAGE_KEYS.REPORTS)) {
-        const sampleReports = [
-            {
-                id: 'RPT-001',
-                title: 'Jalan Berlubang di Gang Mawar',
-                category: 'infrastruktur',
-                description: 'Terdapat lubang besar di jalan gang mawar yang membahayakan pengendara motor, terutama saat malam hari.',
-                location: 'Gang Mawar, RT 01/RW 05',
-                status: 'proses',
-                isAnonymous: false,
-                userId: '3',
-                userName: 'Ahmad Wijaya',
-                images: [],
-                responses: [
-                    {
-                        id: '1',
-                        message: 'Terima kasih atas laporannya. Kami akan segera menindaklanjuti dengan mengecek lokasi.',
-                        createdAt: new Date(Date.now() - 86400000).toISOString(),
-                        responderId: '1',
-                        responderName: 'Budi Santoso',
-                        responderRole: 'ketua_rt',
-                    }
-                ],
-                createdAt: new Date(Date.now() - 172800000).toISOString(),
-                updatedAt: new Date(Date.now() - 86400000).toISOString(),
-            },
-            {
-                id: 'RPT-002',
-                title: 'Lampu Jalan Mati',
-                category: 'infrastruktur',
-                description: 'Lampu jalan di depan pos ronda sudah mati sejak 1 minggu yang lalu.',
-                location: 'Depan Pos Ronda, RT 01/RW 05',
-                status: 'selesai',
-                isAnonymous: true,
-                userId: null,
-                userName: 'Anonim',
-                images: [],
-                responses: [
-                    {
-                        id: '1',
-                        message: 'Lampu sudah diperbaiki oleh petugas PLN. Terima kasih atas laporannya.',
-                        createdAt: new Date(Date.now() - 43200000).toISOString(),
-                        responderId: '2',
-                        responderName: 'Siti Rahayu',
-                        responderRole: 'admin',
-                    }
-                ],
-                createdAt: new Date(Date.now() - 604800000).toISOString(),
-                updatedAt: new Date(Date.now() - 43200000).toISOString(),
-            },
-            {
-                id: 'RPT-003',
-                title: 'Sampah Menumpuk',
-                category: 'kebersihan',
-                description: 'Sampah di TPS sudah menumpuk dan berbau tidak sedap. Mohon segera diangkut.',
-                location: 'TPS RT 01/RW 05',
-                status: 'baru',
-                isAnonymous: false,
-                userId: '3',
-                userName: 'Ahmad Wijaya',
-                images: [],
-                responses: [],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            },
-        ];
-        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(sampleReports));
-    }
-
-    // Initialize sample finances
-    if (!localStorage.getItem(STORAGE_KEYS.FINANCES)) {
-        const now = new Date();
-        const sampleFinances = [
-            // Pemasukan
-            { id: 'FIN-001', type: 'income', category: 'iuran', amount: 500000, description: 'Iuran bulanan RT - November 2024', date: new Date(now.getFullYear(), now.getMonth() - 1, 5).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-002', type: 'income', category: 'iuran', amount: 520000, description: 'Iuran bulanan RT - Oktober 2024', date: new Date(now.getFullYear(), now.getMonth() - 2, 5).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-003', type: 'income', category: 'sumbangan', amount: 1000000, description: 'Sumbangan warga untuk perbaikan jalan', date: new Date(now.getFullYear(), now.getMonth() - 1, 10).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-004', type: 'income', category: 'iuran', amount: 500000, description: 'Iuran bulanan RT - Desember 2024', date: new Date(now.getFullYear(), now.getMonth(), 5).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            // Pengeluaran
-            { id: 'FIN-005', type: 'expense', category: 'infrastruktur', amount: 750000, description: 'Perbaikan jalan gang mawar', date: new Date(now.getFullYear(), now.getMonth() - 1, 15).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-006', type: 'expense', category: 'kebersihan', amount: 200000, description: 'Pembelian peralatan kebersihan', date: new Date(now.getFullYear(), now.getMonth() - 2, 20).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-007', type: 'expense', category: 'keamanan', amount: 300000, description: 'Gaji satpam bulan November', date: new Date(now.getFullYear(), now.getMonth() - 1, 28).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-            { id: 'FIN-008', type: 'expense', category: 'acara', amount: 500000, description: 'Acara 17 Agustus', date: new Date(now.getFullYear(), 7, 17).toISOString(), createdBy: '2', createdByName: 'Siti Rahayu' },
-        ];
-        localStorage.setItem(STORAGE_KEYS.FINANCES, JSON.stringify(sampleFinances));
-    }
-
-    // Initialize sample documents
-    if (!localStorage.getItem(STORAGE_KEYS.DOCUMENTS)) {
-        const sampleDocuments = [
-            {
-                id: 'DOC-001',
-                type: 'surat_pengantar',
-                purpose: 'Pembuatan KTP',
-                status: 'selesai',
-                requesterId: '3',
-                requesterName: 'Ahmad Wijaya',
-                requesterAddress: 'RT 01/RW 05, No. 15',
-                supportingDocs: ['KK', 'KTP Lama'],
-                requesterSignature: null,
-                approverSignature: null,
-                approvedAt: new Date(Date.now() - 86400000).toISOString(),
-                approvedBy: '1',
-                approverName: 'Budi Santoso',
-                notes: '',
-                createdAt: new Date(Date.now() - 172800000).toISOString(),
-                updatedAt: new Date(Date.now() - 86400000).toISOString(),
-            },
-            {
-                id: 'DOC-002',
-                type: 'surat_domisili',
-                purpose: 'Keperluan pekerjaan',
-                status: 'proses',
-                requesterId: '3',
-                requesterName: 'Ahmad Wijaya',
-                requesterAddress: 'RT 01/RW 05, No. 15',
-                supportingDocs: ['KTP', 'KK'],
-                requesterSignature: null,
-                approverSignature: null,
-                approvedAt: null,
-                approvedBy: null,
-                approverName: null,
-                notes: '',
-                createdAt: new Date(Date.now() - 43200000).toISOString(),
-                updatedAt: new Date(Date.now() - 43200000).toISOString(),
-            },
-        ];
-        localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(sampleDocuments));
-    }
-}
-
-// Users
-export function getUsers() {
+    // localStorage fallback
     if (typeof window === 'undefined') return [];
-    const users = localStorage.getItem(STORAGE_KEYS.USERS);
+    const users = localStorage.getItem('rtrw_users');
     return users ? JSON.parse(users) : [];
 }
 
-export function addUser(user) {
-    const users = getUsers();
+export async function addUser(user) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('users').insert([{
+            email: user.email,
+            name: user.name,
+            phone: user.phone,
+            address: user.address,
+            role: user.role || 'warga',
+        }]).select().single();
+        if (error) {
+            console.error('Error adding user:', error);
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    // localStorage fallback
+    const users = await getUsers();
     users.push(user);
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    localStorage.setItem('rtrw_users', JSON.stringify(users));
     return user;
 }
 
-export function getUserByEmail(email) {
-    const users = getUsers();
-    return users.find(u => u.email === email);
+export async function getUserByEmail(email) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching user:', error);
+        }
+        return data || null;
+    }
+    // localStorage fallback
+    const users = await getUsers();
+    return users.find(u => u.email === email) || null;
 }
 
-export function getUserById(id) {
-    const users = getUsers();
-    return users.find(u => u.id === id);
+export async function getUserById(id) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('users').select('*').eq('id', id).single();
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching user:', error);
+        }
+        return data || null;
+    }
+    // localStorage fallback
+    const users = await getUsers();
+    return users.find(u => u.id === id) || null;
 }
 
-export function updateUser(id, updates) {
-    const users = getUsers();
+export async function updateUser(id, updates) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('users').update(updates).eq('id', id).select().single();
+        if (error) {
+            console.error('Error updating user:', error);
+            return null;
+        }
+        return data;
+    }
+    // localStorage fallback
+    const users = await getUsers();
     const index = users.findIndex(u => u.id === id);
     if (index !== -1) {
         users[index] = { ...users[index], ...updates };
-        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+        localStorage.setItem('rtrw_users', JSON.stringify(users));
         return users[index];
     }
     return null;
 }
 
-export function deleteUser(id) {
-    const users = getUsers();
+export async function deleteUser(id) {
+    if (isSupabaseEnabled()) {
+        const { error } = await supabase.from('users').delete().eq('id', id);
+        if (error) console.error('Error deleting user:', error);
+        return;
+    }
+    // localStorage fallback
+    const users = await getUsers();
     const filtered = users.filter(u => u.id !== id);
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(filtered));
+    localStorage.setItem('rtrw_users', JSON.stringify(filtered));
 }
 
-// Current User
-export function setCurrentUser(user) {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
-}
+// ==================== REPORTS ====================
 
-export function getCurrentUser() {
-    if (typeof window === 'undefined') return null;
-    const user = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-    return user ? JSON.parse(user) : null;
-}
+export async function getReports() {
+    if (isSupabaseEnabled()) {
+        // Get reports
+        const { data: reports, error } = await supabase
+            .from('reports')
+            .select('*')
+            .order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching reports:', error);
+            return [];
+        }
 
-export function removeCurrentUser() {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-}
+        // Get responses for each report
+        const { data: responses } = await supabase.from('report_responses').select('*');
 
-// Reports
-export function getReports() {
+        // Merge responses into reports
+        return (reports || []).map(report => ({
+            ...report,
+            isAnonymous: report.is_anonymous,
+            userId: report.user_id,
+            userName: report.user_name,
+            createdAt: report.created_at,
+            updatedAt: report.updated_at,
+            responses: (responses || [])
+                .filter(r => r.report_id === report.id)
+                .map(r => ({
+                    id: r.id,
+                    message: r.message,
+                    responderId: r.responder_id,
+                    responderName: r.responder_name,
+                    responderRole: r.responder_role,
+                    createdAt: r.created_at,
+                }))
+        }));
+    }
+    // localStorage fallback
     if (typeof window === 'undefined') return [];
-    const reports = localStorage.getItem(STORAGE_KEYS.REPORTS);
+    const reports = localStorage.getItem('rtrw_reports');
     return reports ? JSON.parse(reports) : [];
 }
 
-export function addReport(report) {
-    const reports = getReports();
+export async function addReport(report) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('reports').insert([{
+            id: report.id,
+            title: report.title,
+            category: report.category,
+            description: report.description,
+            location: report.location,
+            status: report.status || 'baru',
+            is_anonymous: report.isAnonymous || false,
+            user_id: report.userId,
+            user_name: report.userName,
+            images: report.images || [],
+        }]).select().single();
+        if (error) {
+            console.error('Error adding report:', error);
+            throw new Error(error.message);
+        }
+        return { ...data, responses: [] };
+    }
+    // localStorage fallback
+    const reports = await getReports();
     reports.unshift(report);
-    localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(reports));
+    localStorage.setItem('rtrw_reports', JSON.stringify(reports));
     return report;
 }
 
-export function updateReport(id, updates) {
-    const reports = getReports();
+export async function updateReport(id, updates) {
+    if (isSupabaseEnabled()) {
+        const dbUpdates = {
+            ...(updates.title && { title: updates.title }),
+            ...(updates.category && { category: updates.category }),
+            ...(updates.description && { description: updates.description }),
+            ...(updates.location && { location: updates.location }),
+            ...(updates.status && { status: updates.status }),
+            ...(updates.images && { images: updates.images }),
+            updated_at: new Date().toISOString(),
+        };
+
+        const { data, error } = await supabase.from('reports').update(dbUpdates).eq('id', id).select().single();
+        if (error) {
+            console.error('Error updating report:', error);
+            return null;
+        }
+        return data;
+    }
+    // localStorage fallback
+    const reports = await getReports();
     const index = reports.findIndex(r => r.id === id);
     if (index !== -1) {
         reports[index] = { ...reports[index], ...updates, updatedAt: new Date().toISOString() };
-        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(reports));
+        localStorage.setItem('rtrw_reports', JSON.stringify(reports));
         return reports[index];
     }
     return null;
 }
 
-export function getReportById(id) {
-    const reports = getReports();
-    return reports.find(r => r.id === id);
+export async function getReportById(id) {
+    if (isSupabaseEnabled()) {
+        const { data: report, error } = await supabase.from('reports').select('*').eq('id', id).single();
+        if (error) {
+            console.error('Error fetching report:', error);
+            return null;
+        }
+
+        // Get responses
+        const { data: responses } = await supabase.from('report_responses').select('*').eq('report_id', id);
+
+        return {
+            ...report,
+            isAnonymous: report.is_anonymous,
+            userId: report.user_id,
+            userName: report.user_name,
+            createdAt: report.created_at,
+            updatedAt: report.updated_at,
+            responses: (responses || []).map(r => ({
+                id: r.id,
+                message: r.message,
+                responderId: r.responder_id,
+                responderName: r.responder_name,
+                responderRole: r.responder_role,
+                createdAt: r.created_at,
+            }))
+        };
+    }
+    // localStorage fallback
+    const reports = await getReports();
+    return reports.find(r => r.id === id) || null;
 }
 
-export function deleteReport(id) {
-    const reports = getReports();
+export async function deleteReport(id) {
+    if (isSupabaseEnabled()) {
+        const { error } = await supabase.from('reports').delete().eq('id', id);
+        if (error) console.error('Error deleting report:', error);
+        return;
+    }
+    // localStorage fallback
+    const reports = await getReports();
     const filtered = reports.filter(r => r.id !== id);
-    localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(filtered));
+    localStorage.setItem('rtrw_reports', JSON.stringify(filtered));
 }
 
-// Finances
-export function getFinances() {
+// Add response to report
+export async function addReportResponse(reportId, response) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('report_responses').insert([{
+            report_id: reportId,
+            message: response.message,
+            responder_id: response.responderId,
+            responder_name: response.responderName,
+            responder_role: response.responderRole,
+        }]).select().single();
+        if (error) {
+            console.error('Error adding response:', error);
+            return null;
+        }
+        return data;
+    }
+    // localStorage fallback
+    const reports = await getReports();
+    const index = reports.findIndex(r => r.id === reportId);
+    if (index !== -1) {
+        if (!reports[index].responses) reports[index].responses = [];
+        reports[index].responses.push(response);
+        localStorage.setItem('rtrw_reports', JSON.stringify(reports));
+        return response;
+    }
+    return null;
+}
+
+// ==================== FINANCES ====================
+
+export async function getFinances() {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('finances').select('*').order('date', { ascending: false });
+        if (error) {
+            console.error('Error fetching finances:', error);
+            return [];
+        }
+        return (data || []).map(f => ({
+            ...f,
+            createdBy: f.created_by,
+            createdByName: f.created_by_name,
+        }));
+    }
+    // localStorage fallback
     if (typeof window === 'undefined') return [];
-    const finances = localStorage.getItem(STORAGE_KEYS.FINANCES);
+    const finances = localStorage.getItem('rtrw_finances');
     return finances ? JSON.parse(finances) : [];
 }
 
-export function addFinance(finance) {
-    const finances = getFinances();
+export async function addFinance(finance) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('finances').insert([{
+            id: finance.id,
+            type: finance.type,
+            category: finance.category,
+            amount: finance.amount,
+            description: finance.description,
+            date: finance.date,
+            created_by: finance.createdBy,
+            created_by_name: finance.createdByName,
+        }]).select().single();
+        if (error) {
+            console.error('Error adding finance:', error);
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    // localStorage fallback
+    const finances = await getFinances();
     finances.unshift(finance);
-    localStorage.setItem(STORAGE_KEYS.FINANCES, JSON.stringify(finances));
+    localStorage.setItem('rtrw_finances', JSON.stringify(finances));
     return finance;
 }
 
-export function updateFinance(id, updates) {
-    const finances = getFinances();
+export async function updateFinance(id, updates) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('finances').update(updates).eq('id', id).select().single();
+        if (error) {
+            console.error('Error updating finance:', error);
+            return null;
+        }
+        return data;
+    }
+    // localStorage fallback
+    const finances = await getFinances();
     const index = finances.findIndex(f => f.id === id);
     if (index !== -1) {
         finances[index] = { ...finances[index], ...updates };
-        localStorage.setItem(STORAGE_KEYS.FINANCES, JSON.stringify(finances));
+        localStorage.setItem('rtrw_finances', JSON.stringify(finances));
         return finances[index];
     }
     return null;
 }
 
-export function deleteFinance(id) {
-    const finances = getFinances();
+export async function deleteFinance(id) {
+    if (isSupabaseEnabled()) {
+        const { error } = await supabase.from('finances').delete().eq('id', id);
+        if (error) console.error('Error deleting finance:', error);
+        return;
+    }
+    // localStorage fallback
+    const finances = await getFinances();
     const filtered = finances.filter(f => f.id !== id);
-    localStorage.setItem(STORAGE_KEYS.FINANCES, JSON.stringify(filtered));
+    localStorage.setItem('rtrw_finances', JSON.stringify(filtered));
 }
 
-// Documents
-export function getDocuments() {
+// ==================== DOCUMENTS ====================
+
+export async function getDocuments() {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('documents').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching documents:', error);
+            return [];
+        }
+        return (data || []).map(d => ({
+            ...d,
+            requesterId: d.requester_id,
+            requesterName: d.requester_name,
+            requesterAddress: d.requester_address,
+            supportingDocs: d.supporting_docs,
+            requesterSignature: d.requester_signature,
+            approverSignature: d.approver_signature,
+            approvedAt: d.approved_at,
+            approvedBy: d.approved_by,
+            approverName: d.approver_name,
+            createdAt: d.created_at,
+            updatedAt: d.updated_at,
+        }));
+    }
+    // localStorage fallback
     if (typeof window === 'undefined') return [];
-    const documents = localStorage.getItem(STORAGE_KEYS.DOCUMENTS);
+    const documents = localStorage.getItem('rtrw_documents');
     return documents ? JSON.parse(documents) : [];
 }
 
-export function addDocument(doc) {
-    const documents = getDocuments();
+export async function addDocument(doc) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('documents').insert([{
+            id: doc.id,
+            type: doc.type,
+            purpose: doc.purpose,
+            status: doc.status || 'diajukan',
+            requester_id: doc.requesterId,
+            requester_name: doc.requesterName,
+            requester_address: doc.requesterAddress,
+            supporting_docs: doc.supportingDocs || [],
+            requester_signature: doc.requesterSignature,
+        }]).select().single();
+        if (error) {
+            console.error('Error adding document:', error);
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    // localStorage fallback
+    const documents = await getDocuments();
     documents.unshift(doc);
-    localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(documents));
+    localStorage.setItem('rtrw_documents', JSON.stringify(documents));
     return doc;
 }
 
-export function updateDocument(id, updates) {
-    const documents = getDocuments();
+export async function updateDocument(id, updates) {
+    if (isSupabaseEnabled()) {
+        const dbUpdates = {
+            ...(updates.status && { status: updates.status }),
+            ...(updates.notes !== undefined && { notes: updates.notes }),
+            ...(updates.approvedAt && { approved_at: updates.approvedAt }),
+            ...(updates.approvedBy && { approved_by: updates.approvedBy }),
+            ...(updates.approverName && { approver_name: updates.approverName }),
+            ...(updates.approverSignature && { approver_signature: updates.approverSignature }),
+            updated_at: new Date().toISOString(),
+        };
+
+        const { data, error } = await supabase.from('documents').update(dbUpdates).eq('id', id).select().single();
+        if (error) {
+            console.error('Error updating document:', error);
+            return null;
+        }
+        return {
+            ...data,
+            requesterId: data.requester_id,
+            requesterName: data.requester_name,
+            requesterAddress: data.requester_address,
+            supportingDocs: data.supporting_docs,
+            requesterSignature: data.requester_signature,
+            approverSignature: data.approver_signature,
+            approvedAt: data.approved_at,
+            approvedBy: data.approved_by,
+            approverName: data.approver_name,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+        };
+    }
+    // localStorage fallback
+    const documents = await getDocuments();
     const index = documents.findIndex(d => d.id === id);
     if (index !== -1) {
         documents[index] = { ...documents[index], ...updates, updatedAt: new Date().toISOString() };
-        localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(documents));
+        localStorage.setItem('rtrw_documents', JSON.stringify(documents));
         return documents[index];
     }
     return null;
 }
 
-export function getDocumentById(id) {
-    const documents = getDocuments();
-    return documents.find(d => d.id === id);
+export async function getDocumentById(id) {
+    if (isSupabaseEnabled()) {
+        const { data, error } = await supabase.from('documents').select('*').eq('id', id).single();
+        if (error) {
+            console.error('Error fetching document:', error);
+            return null;
+        }
+        return {
+            ...data,
+            requesterId: data.requester_id,
+            requesterName: data.requester_name,
+            requesterAddress: data.requester_address,
+            supportingDocs: data.supporting_docs,
+            requesterSignature: data.requester_signature,
+            approverSignature: data.approver_signature,
+            approvedAt: data.approved_at,
+            approvedBy: data.approved_by,
+            approverName: data.approver_name,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+        };
+    }
+    // localStorage fallback
+    const documents = await getDocuments();
+    return documents.find(d => d.id === id) || null;
 }
 
-export function deleteDocument(id) {
-    const documents = getDocuments();
+export async function deleteDocument(id) {
+    if (isSupabaseEnabled()) {
+        const { error } = await supabase.from('documents').delete().eq('id', id);
+        if (error) console.error('Error deleting document:', error);
+        return;
+    }
+    // localStorage fallback
+    const documents = await getDocuments();
     const filtered = documents.filter(d => d.id !== id);
-    localStorage.setItem(STORAGE_KEYS.DOCUMENTS, JSON.stringify(filtered));
+    localStorage.setItem('rtrw_documents', JSON.stringify(filtered));
 }
 
-// Generate unique ID
+// ==================== UTILITIES ====================
+
 export function generateId(prefix = '') {
     const timestamp = Date.now().toString(36);
     const randomStr = Math.random().toString(36).substring(2, 7);
     return prefix ? `${prefix}-${timestamp}${randomStr}`.toUpperCase() : `${timestamp}${randomStr}`;
+}
+
+// Initialize storage - no longer needed for Supabase but kept for localStorage fallback
+export function initializeStorage() {
+    if (typeof window === 'undefined' || isSupabaseEnabled()) return;
+    // localStorage initialization code would go here if needed
 }

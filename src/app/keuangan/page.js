@@ -44,8 +44,8 @@ export default function KeuanganPage() {
         loadFinances();
     }, []);
 
-    const loadFinances = () => {
-        const data = getFinances();
+    const loadFinances = async () => {
+        const data = await getFinances();
         setFinances(data);
         calculateStats(data);
     };

@@ -50,8 +50,8 @@ export default function KelolaKeuanganPage() {
         loadFinances();
     }, [isAdmin]);
 
-    const loadFinances = () => {
-        const data = getFinances();
+    const loadFinances = async () => {
+        const data = await getFinances();
         setFinances(data);
     };
 
@@ -125,22 +125,22 @@ export default function KelolaKeuanganPage() {
         };
 
         if (editingItem) {
-            updateFinance(editingItem.id, financeData);
+            await updateFinance(editingItem.id, financeData);
         } else {
-            addFinance({
+            await addFinance({
                 id: generateId('FIN'),
                 ...financeData,
             });
         }
 
-        loadFinances();
+        await loadFinances();
         handleCloseModal();
         setIsSubmitting(false);
     };
 
-    const handleDelete = (id) => {
-        deleteFinance(id);
-        loadFinances();
+    const handleDelete = async (id) => {
+        await deleteFinance(id);
+        await loadFinances();
         setDeleteConfirm(null);
     };
 

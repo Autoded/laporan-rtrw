@@ -25,10 +25,10 @@ export default function DashboardPage() {
         loadDashboardData();
     }, [user]);
 
-    const loadDashboardData = () => {
-        const reports = getReports();
-        const finances = getFinances();
-        const documents = getDocuments();
+    const loadDashboardData = async () => {
+        const reports = await getReports();
+        const finances = await getFinances();
+        const documents = await getDocuments();
 
         const reportStats = {
             total: reports.length,

@@ -42,8 +42,8 @@ export default function DocumentDetailPage({ params }) {
         loadDocument();
     }, [resolvedParams.id]);
 
-    const loadDocument = () => {
-        const found = getDocumentById(resolvedParams.id);
+    const loadDocument = async () => {
+        const found = await getDocumentById(resolvedParams.id);
         if (found) setDocument(found);
         setIsLoading(false);
     };
@@ -64,7 +64,7 @@ export default function DocumentDetailPage({ params }) {
         if (!isKetuaRT) return;
         setIsSubmitting(true);
         await new Promise(resolve => setTimeout(resolve, 300));
-        const updated = updateDocument(document.id, { status: 'proses' });
+        const updated = await updateDocument(document.id, { status: 'proses' });
         if (updated) setDocument(updated);
         setIsSubmitting(false);
     };
@@ -84,7 +84,7 @@ export default function DocumentDetailPage({ params }) {
             approverName: user.name,
             approverSignature: approvalType === 'approve' ? approverSignature?.url : null,
         };
-        const updated = updateDocument(document.id, updates);
+        const updated = await updateDocument(document.id, updates);
         if (updated) setDocument(updated);
         setShowApprovalModal(false);
         setIsSubmitting(false);

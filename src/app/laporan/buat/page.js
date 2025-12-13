@@ -105,7 +105,7 @@ export default function BuatLaporanPage() {
             updatedAt: new Date().toISOString(),
         };
 
-        addReport(newReport);
+        await addReport(newReport);
         setCreatedId(reportId);
         setShowSuccess(true);
         setIsSubmitting(false);
