@@ -99,28 +99,7 @@ export default function DashboardPage() {
                                 {getRoleInfo(user?.role)?.label} • {user?.address}
                             </p>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            {quickActions.slice(0, 2).map((action, index) => {
-                                const ActionIcon = action.Icon;
-                                return (
-                                    <Link key={index} href={action.href} style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        padding: '0.75rem 1.25rem',
-                                        backgroundColor: 'rgba(255,255,255,0.2)',
-                                        borderRadius: '10px',
-                                        color: 'white',
-                                        textDecoration: 'none',
-                                        fontWeight: 500,
-                                        fontSize: '0.9375rem'
-                                    }}>
-                                        <ActionIcon style={{ width: '18px', height: '18px' }} />
-                                        <span>{action.label}</span>
-                                    </Link>
-                                );
-                            })}
-                        </div>
+
                     </div>
                 </div>
 
@@ -184,9 +163,6 @@ export default function DashboardPage() {
                     <div style={cardStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                             <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0F172A', margin: 0 }}>Laporan Terbaru</h3>
-                            <Link href="/laporan" style={{ fontSize: '0.875rem', color: '#3B82F6', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                                Lihat Semua <ChevronRight style={{ width: '16px', height: '16px' }} />
-                            </Link>
                         </div>
                         {recentReports.length > 0 ? (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -271,70 +247,6 @@ export default function DashboardPage() {
                                     </div>
                                 </div>
                             </div>
-                            <Link href="/keuangan" style={{
-                                display: 'block',
-                                textAlign: 'center',
-                                padding: '0.75rem',
-                                backgroundColor: '#F1F5F9',
-                                borderRadius: '10px',
-                                color: '#475569',
-                                textDecoration: 'none',
-                                fontWeight: 500,
-                                marginTop: '1rem',
-                                fontSize: '0.9375rem'
-                            }}>
-                                Lihat Detail
-                            </Link>
-                        </div>
-
-                        {/* Recent Documents */}
-                        <div style={cardStyle}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0F172A', margin: 0 }}>Dokumen Saya</h3>
-                                <Link href="/dokumen" style={{ fontSize: '0.875rem', color: '#3B82F6', textDecoration: 'none' }}>
-                                    Lihat Semua
-                                </Link>
-                            </div>
-                            {recentDocuments.length > 0 ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                    {recentDocuments.map(doc => {
-                                        const statusInfo = getStatusInfo(doc.status);
-                                        return (
-                                            <Link key={doc.id} href={`/dokumen/${doc.id}`} style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.75rem',
-                                                padding: '0.75rem',
-                                                backgroundColor: '#F8FAFC',
-                                                borderRadius: '10px',
-                                                textDecoration: 'none'
-                                            }}>
-                                                <FileCheck style={{ width: '20px', height: '20px', color: '#8B5CF6' }} />
-                                                <div style={{ flex: 1 }}>
-                                                    <p style={{ fontSize: '0.875rem', fontWeight: 500, color: '#0F172A', margin: 0 }}>
-                                                        {doc.type === 'surat-pengantar' ? 'Surat Pengantar' : 'SKU'}
-                                                    </p>
-                                                </div>
-                                                <span style={{
-                                                    padding: '0.125rem 0.5rem',
-                                                    backgroundColor: `${statusInfo.color}20`,
-                                                    color: statusInfo.color,
-                                                    borderRadius: '4px',
-                                                    fontSize: '0.6875rem',
-                                                    fontWeight: 500
-                                                }}>
-                                                    {statusInfo.label}
-                                                </span>
-                                            </Link>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <div style={{ textAlign: 'center', padding: '1.5rem' }}>
-                                    <FileCheck style={{ width: '36px', height: '36px', color: '#CBD5E1', margin: '0 auto 0.5rem' }} />
-                                    <p style={{ color: '#94A3B8', margin: 0, fontSize: '0.875rem' }}>Belum ada dokumen</p>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

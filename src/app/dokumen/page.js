@@ -34,11 +34,14 @@ export default function DokumenPage() {
         let filtered = [...documents];
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(d =>
-                d.purpose?.toLowerCase().includes(query) ||
-                d.requesterName?.toLowerCase().includes(query) ||
-                d.id.toLowerCase().includes(query)
-            );
+            filtered = filtered.filter(d => {
+                const typeInfo = getDocumentTypeInfo(d.type);
+                return (
+                    typeInfo?.label?.toLowerCase().includes(query) ||
+                    d.purpose?.toLowerCase().includes(query) ||
+                    d.requesterName?.toLowerCase().includes(query)
+                );
+            });
         }
         if (statusFilter !== 'all') filtered = filtered.filter(d => d.status === statusFilter);
         if (typeFilter !== 'all') filtered = filtered.filter(d => d.type === typeFilter);

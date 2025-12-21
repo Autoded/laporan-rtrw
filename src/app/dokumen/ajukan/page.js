@@ -119,7 +119,7 @@ export default function AjukanDokumenPage() {
         const newErrors = {};
         if (!formData.type) newErrors.type = 'Pilih jenis dokumen';
         if (!formData.purpose.trim()) newErrors.purpose = 'Keperluan wajib diisi';
-        if (formData.purpose.length < 10) newErrors.purpose = 'Keperluan minimal 10 karakter';
+        if (!formData.purpose.trim()) newErrors.purpose = 'Keperluan wajib diisi';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;

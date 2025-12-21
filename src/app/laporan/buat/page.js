@@ -73,7 +73,7 @@ export default function BuatLaporanPage() {
         if (!formData.title.trim()) newErrors.title = 'Judul laporan wajib diisi';
         if (!formData.category) newErrors.category = 'Pilih kategori laporan';
         if (!formData.description.trim()) newErrors.description = 'Deskripsi wajib diisi';
-        if (formData.description.length < 20) newErrors.description = 'Deskripsi minimal 20 karakter';
+        if (!formData.description.trim()) newErrors.description = 'Deskripsi wajib diisi';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -339,7 +339,7 @@ export default function BuatLaporanPage() {
                                         {errors.description}
                                     </p>
                                 ) : (
-                                    <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>Minimal 20 karakter</span>
+                                    <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>Deskripsi wajib diisi</span>
                                 )}
                                 <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>{formData.description.length} karakter</span>
                             </div>
