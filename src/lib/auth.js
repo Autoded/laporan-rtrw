@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase, isSupabaseEnabled } from './supabase';
+import bcrypt from 'bcryptjs';
 
 const AuthContext = createContext(null);
 
@@ -44,8 +45,16 @@ export function AuthProvider({ children }) {
                 throw new Error('Email tidak terdaftar');
             }
 
-            // For demo, we don't store passwords in Supabase
-            // In production, use Supabase Auth
+            // Verify password with bcrypt
+            if (!foundUser.password_hash) {
+                throw new Error('Akun belum memiliki password. Silakan hubungi admin.');
+            }
+
+            const isPasswordValid = await bcrypt.compare(password, foundUser.password_hash);
+            if (!isPasswordValid) {
+                throw new Error('Password salah');
+            }
+
             const userWithoutPassword = {
                 id: foundUser.id,
                 name: foundUser.name,
@@ -94,7 +103,10 @@ export function AuthProvider({ children }) {
                 throw new Error('Email sudah terdaftar');
             }
 
-            // Insert new user
+            // Hash password with bcrypt
+            const passwordHash = await bcrypt.hash(userData.password, 10);
+
+            // Insert new user with hashed password
             const { data: newUser, error } = await supabase
                 .from('users')
                 .insert([{
@@ -103,6 +115,7 @@ export function AuthProvider({ children }) {
                     phone: userData.phone,
                     address: userData.address,
                     role: 'warga',
+                    password_hash: passwordHash,
                 }])
                 .select()
                 .single();

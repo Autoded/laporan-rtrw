@@ -41,16 +41,7 @@ export default function LoginPage() {
         }
     };
 
-    const demoAccounts = [
-        { email: 'ketua@rtrw.com', password: 'admin123', role: 'Ketua RT' },
-        { email: 'bendahara@rtrw.com', password: 'admin123', role: 'Admin/Bendahara' },
-        { email: 'warga@rtrw.com', password: 'warga123', role: 'Warga' },
-    ];
 
-    const fillDemo = (account) => {
-        setEmail(account.email);
-        setPassword(account.password);
-    };
 
     if (!mounted) {
         return null;
@@ -243,39 +234,7 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    {/* Demo Accounts */}
-                    <div style={{
-                        marginTop: '2rem',
-                        padding: '1rem',
-                        backgroundColor: '#F1F5F9',
-                        borderRadius: '12px'
-                    }}>
-                        <p style={{ fontSize: '0.875rem', fontWeight: 500, color: '#475569', marginBottom: '0.75rem' }}>
-                            🎮 Akun Demo:
-                        </p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {demoAccounts.map((account, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => fillDemo(account)}
-                                    type="button"
-                                    style={{
-                                        width: '100%',
-                                        textAlign: 'left',
-                                        padding: '0.5rem 0.75rem',
-                                        backgroundColor: 'white',
-                                        border: 'none',
-                                        borderRadius: '8px',
-                                        cursor: 'pointer',
-                                        fontSize: '0.875rem'
-                                    }}
-                                >
-                                    <span style={{ fontWeight: 500, color: '#0F172A' }}>{account.role}</span>
-                                    <span style={{ color: '#94A3B8' }}> - {account.email}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+
 
                     {/* Register Link */}
                     <p style={{ marginTop: '2rem', textAlign: 'center', color: '#64748B' }}>
