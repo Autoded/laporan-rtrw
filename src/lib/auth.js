@@ -135,8 +135,7 @@ export function AuthProvider({ children }) {
                 createdAt: newUser.created_at,
             };
 
-            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
-            setUser(userWithoutPassword);
+            // Don't auto-login, just return the user data
             return userWithoutPassword;
         }
 

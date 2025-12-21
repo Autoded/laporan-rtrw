@@ -51,7 +51,7 @@ export default function RegisterPage() {
                 phone: formData.phone,
                 address: formData.address,
             });
-            router.push('/dashboard');
+            router.push('/login');
         } catch (err) {
             setError(err.message);
         } finally {
